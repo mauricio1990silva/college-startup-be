@@ -1,12 +1,14 @@
 package college.startup.service;
 
 
+import college.startup.domain.Membership;
 import college.startup.domain.Project;
 import college.startup.domain.Tag;
 import college.startup.domain.User;
 import college.startup.dto.PageParams;
 import college.startup.dto.ProjectParams;
 import college.startup.dto.ProjectPostDTO;
+import college.startup.repository.MembershipRepository;
 import college.startup.repository.ProjectRepository;
 import college.startup.repository.TagRepository;
 import college.startup.service.exception.NotPermittedException;
@@ -14,7 +16,9 @@ import college.startup.util.RepositoryUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Member;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,14 +27,17 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final TagRepository tagRepository;
+    private final MembershipRepository membershipRepository;
     private final SecurityContextService securityContextService;
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
                               TagRepository tagRepository,
+                              MembershipRepository membershipRepository,
                               SecurityContextService securityContextService) {
         this.projectRepository = projectRepository;
         this.tagRepository = tagRepository;
+        this.membershipRepository = membershipRepository;
         this.securityContextService = securityContextService;
     }
 
@@ -41,6 +48,12 @@ public class ProjectServiceImpl implements ProjectService {
         if (currentUser != project.getUser())
             throw new NotPermittedException("no permission to delete this post");
         projectRepository.delete(id);
+    }
+
+    @Override
+    public Project create(Project newProject, User user) {
+        final Project project = projectRepository.save(newProject);
+        return project;
     }
 
     @Override
@@ -61,7 +74,15 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectPostDTO> findAsFeed(PageParams pageParams) {
         final User currentUser = securityContextService.currentUser();
         final List<ProjectPostDTO> feed = projectRepository.findAsFeed(currentUser, pageParams);
-        feed.forEach(p -> p.setIsMyProject(p.getUser().getId() == currentUser.getId()));
+        feed.forEach(p -> {
+                    final User user = p.getUser(); p.setIsMyProject(user.getId() == currentUser.getId());
+                    final Optional<Membership> membership = membershipRepository.findOneByUserAndProject(user, p.getProject());
+                    if (membership.isPresent())
+                        p.setMyMembershipStatus(membership.get().getStatus());
+                    else
+                        p.setMyMembershipStatus("NOT_MEMBER");
+                }
+        );
         return feed;
     }
 

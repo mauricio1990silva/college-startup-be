@@ -25,6 +25,7 @@
 		<start-class>college.startup.Application</start-class>
 		<querydsl.version>4.0.8</querydsl.version>
 		<spock.version>1.0-groovy-2.4</spock.version>
+		<firebase.version>3.0.1</firebase.version>
 	</properties>
 
 	<dependencies>
@@ -63,6 +64,11 @@
 			<version>0.6.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.google.firebase</groupId>
+			<artifactId>firebase-server-sdk</artifactId>
+			<version>${firebase.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.bgee.log4jdbc-log4j2</groupId>
 			<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
 			<version>1.16</version>
@@ -70,6 +76,13 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.gcm</groupId>
+			<artifactId>gcm-server</artifactId>
+			<version>1.0-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/src/main/resources/gcm-server-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.querydsl</groupId>
@@ -161,12 +174,12 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>build-helper-maven-plugin</artifactId>
+			<executions>
+				<execution>
+					<phase>generate-sources</phase>
+					<goals>
 							<goal>add-source</goal>
 						</goals>
 						<configuration>

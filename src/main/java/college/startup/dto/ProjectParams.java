@@ -10,28 +10,29 @@ import lombok.Setter;
 import lombok.ToString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.Size;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import javax.validation.constraints.NotNull;
 @ToString
 @EqualsAndHashCode
 public final class ProjectParams {
 
     @SuppressWarnings("unused")
     private static final Logger logger = LoggerFactory.getLogger(ProjectParams.class);
-
+    @NotNull
     private final String name;
     @Size(min = 8, max = 100)
     private final String type;
     private final String content;
     private final int membersRequired;
     private final List<String> projectTags;
+
+    @Getter
+    @Setter
+    private  String firebaseId;
 
     @Setter
     @Getter
@@ -51,6 +52,7 @@ public final class ProjectParams {
         this.content = content;
         this.membersRequired = membersRequired;
         this.projectTags = projectTags;
+        this.firebaseId = "";
     }
 
 
@@ -86,6 +88,7 @@ public final class ProjectParams {
         project.setContent(content);
         project.setMembersRequired(membersRequired);
         project.setTags(tags);
+        project.setFireBaseId(firebaseId);
         return project;
     }
 

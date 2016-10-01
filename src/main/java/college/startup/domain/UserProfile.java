@@ -25,6 +25,7 @@ public class UserProfile  {
             parameters=@Parameter(name="property", value="user"))
     @Getter
     @Setter
+    @JsonIgnore
     private Long id;
 
     @OneToOne
@@ -51,6 +52,7 @@ public class UserProfile  {
             @JoinColumn(name = "user_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "tag_id",
                     nullable = false, updatable = false) })
+    @JsonIgnore
     private Set<Tag> tags = new HashSet<>();
 
 

@@ -5,6 +5,7 @@ import college.startup.domain.Project;
 import college.startup.domain.Tag;
 import college.startup.domain.User;
 import college.startup.dto.ProjectParams;
+import college.startup.firebase.rest.FirebaseGroupService;
 import college.startup.repository.ProjectRepository;
 import college.startup.repository.TagRepository;
 import college.startup.service.ProjectService;
@@ -16,10 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -29,32 +27,39 @@ public class ProjectController {
     private final ProjectService projectService;
     private final SecurityContextService securityContextService;
     private final TagRepository tagRepository;
+    private final FirebaseGroupService firebaseGroupService;
 
     @Autowired
     public ProjectController(ProjectRepository projectRepository,
                              ProjectService projectService,
                              TagRepository tagRepository,
+                             FirebaseGroupService firebaseGroupService,
                              SecurityContextService securityContextService) {
         this.projectRepository = projectRepository;
         this.projectService = projectService;
+        this.firebaseGroupService = firebaseGroupService;
         this.securityContextService = securityContextService;
         this.tagRepository = tagRepository;
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Project create(@RequestBody ProjectParams projectParams) {
-        User currentUser = securityContextService.currentUser();
-        Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, projectParams.getProjectTags().get());
+    public Project create(@Valid @RequestBody ProjectParams projectParams) {
+        final User user = securityContextService.currentUser();
+        final Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, projectParams.getProjectTags().get());
         projectParams.setTags(tags);
-        projectParams.setUser(currentUser);
-        return projectRepository.save(projectParams.toProject());
+        projectParams.setUser(user);
+        projectParams.setFirebaseId(firebaseGroupService.createGroup(user, projectParams.getName().get())
+                .getNotification_key());
+
+        final Project project = projectParams.toProject();
+
+        return projectService.create(project, user);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public Project updateProject(@PathVariable("id") Long id, @Valid @RequestBody ProjectParams projectParams) {
-        User user = securityContextService.currentUser();
-
-        Project project = projectRepository.findByUserAndId(user, id)
+        final User user = securityContextService.currentUser();
+        final Project project = projectRepository.findByUserAndId(user, id)
                 .orElseThrow(UserNotOwnerException::new);
 
         return projectService.update(project, projectParams);

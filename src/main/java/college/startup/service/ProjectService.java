@@ -14,6 +14,8 @@ public interface ProjectService {
 
     void delete(Long id);
 
+    Project create(Project project, User user);
+
     Project update(Project project, ProjectParams projectParams);
 
     List<ProjectPostDTO> findAsFeed(PageParams pageParams);

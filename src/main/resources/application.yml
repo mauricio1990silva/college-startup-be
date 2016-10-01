@@ -11,6 +11,11 @@ endpoints:
   health.enabled: true
 management:
   context-path: /manage
+firebase:
+  server-key: AIzaSyCCTcPFotI5LToPUqSIbwA_gzyR80nzJK8
+  sender-id: 751513768161
+  server-url: https://fcm.googleapis.com/fcm/send
+  server-notification-url: https://android.googleapis.com/gcm/notification
 app:
   jwt:
     secret: qwerty

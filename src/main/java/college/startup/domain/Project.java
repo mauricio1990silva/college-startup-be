@@ -40,10 +40,23 @@ public class Project implements Serializable {
     @Setter
     private String content;
 
+    @Column(name="firebase_id")
+    @Getter
+    @Setter
+    @JsonIgnore
+    private String fireBaseId;
+
     @Column(name = "members_required")
     @Getter
     @Setter
     private int membersRequired;
+
+
+    @Column(name = "members_joined")
+    @Getter
+    @Setter
+    private int membersJoined;
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,22 +66,32 @@ public class Project implements Serializable {
     @JsonIgnore
     private User user;
 
-//    @Getter
-//    @Setter
-//    @OneToOne(mappedBy="project", cascade=CascadeType.ALL)
-//    private ProjectGroup projectGroup;
-
 
     @Getter
     @Setter
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "likes")
     private Set<User> likeBy = new HashSet<>(0);
 
+
     @Getter
     @Setter
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
-    private List<ProjectComment> projectComments;
+    private List<Comment> comments;
+
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Membership> projectMembership;
+
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Message> messages;
 
 
     @Getter
@@ -78,6 +101,7 @@ public class Project implements Serializable {
             @JoinColumn(name = "project_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "tag_id",
                     nullable = false, updatable = false) })
+    @JsonIgnore
     private Set<Tag> tags = new HashSet<>();
 
 

@@ -51,11 +51,11 @@ public class UserProfileController {
 
     @RequestMapping(method = RequestMethod.POST)
     public UserProfile create(@Valid @RequestBody UserProfileParams params) {
-        User user = securityContextService.currentUser();
-        if(user == null){
+        final User user = securityContextService.currentUser();
+        if (user == null) {
             throw new UserNotFoundException();
         }
-        Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, params.getProjectTags().get());
+        final Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, params.getProjectTags().get());
         params.setUser(user);
         params.setTags(tags);
         return userProfileRepository.save(params.toUserProfile());
@@ -64,13 +64,14 @@ public class UserProfileController {
 
     @RequestMapping(value = "/me", method = RequestMethod.PATCH)
     public UserProfile updateMe(@Valid @RequestBody UserProfileParams params) {
-        User user = securityContextService.currentUser();
-        if(user == null){
+        final User user = securityContextService.currentUser();
+        if (user == null) {
             throw new UserNotFoundException();
         }
         params.getMajor().ifPresent(user.getUserProfile()::setMajor);
         params.getYear().ifPresent(user.getUserProfile()::setYear);
-        Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, params.getProjectTags().get());
+
+        final Set<Tag> tags = RepositoryUtil.removeDuplicates(tagRepository, params.getProjectTags().get());
         user.getUserProfile().setTags(tags);
         return userProfileRepository.save(user.getUserProfile());
     }

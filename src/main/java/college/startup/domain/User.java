@@ -47,6 +47,13 @@ public class User implements UserDetails {
     @Setter
     private String name;
 
+    @Column(name="firebase_id")
+    @Getter
+    @Setter
+    @JsonIgnore
+    private String fireBaseId;
+
+
     @NotNull
     @Column(name = "created_at")
     private Date createdAt;
@@ -63,9 +70,11 @@ public class User implements UserDetails {
 
 
 
-    @OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
-    private ProjectComment projectcomment;
+    private List<Comment> comments;
 
 
     @Getter
@@ -74,11 +83,11 @@ public class User implements UserDetails {
     @JsonIgnore
     private List<Project> projects;
 
-//    @Getter
-//    @Setter
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
-//    @JsonIgnore
-//    private List<ProjectGroup> projectGroups;
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Message> messages;
 
     @Getter
     @Setter
@@ -90,11 +99,21 @@ public class User implements UserDetails {
     @JsonIgnore
     private Set<Project> likes = new HashSet<>();
 
+
     @Getter
     @Setter
     @OneToMany(mappedBy = "follower", fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     private List<Relationship> followerRelations;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Membership> projectMembership;
+
+
+
 
     @Getter
     @Setter

@@ -4,6 +4,7 @@ CREATE TABLE `user` (
   `password`            VARCHAR(100) NOT NULL,
   `username`            VARCHAR(30)  NOT NULL,
   `registration_status` VARCHAR(30)  NOT NULL,
+  `firebase_id`         VARCHAR(255),
   `created_at`          DATETIME     NOT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `UK_username` (`username`)
@@ -46,10 +47,12 @@ CREATE TABLE `project` (
   `project_id`       BIGINT(20)       NOT NULL AUTO_INCREMENT,
   `type`             VARCHAR(255)     NOT NULL,
   `name`             VARCHAR(255)     NOT NULL,
+  `firebase_id`      VARCHAR(255),
   `content`          VARCHAR(255)     NOT NULL,
   `created_at`       DATETIME         NOT NULL,
   `user_id`          BIGINT(20)       NOT NULL,
   `members_required` INT(10) UNSIGNED NOT NULL,
+  `members_joined`   INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`project_id`),
   KEY `FK_user` (`user_id`),
   CONSTRAINT `FK_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
@@ -57,17 +60,22 @@ CREATE TABLE `project` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-# CREATE TABLE `project_group` (
-#   `project_group_id` BIGINT(20)  NOT NULL AUTO_INCREMENT,
-#   `user_id`          BIGINT(20)  NOT NULL,
-#   `user_role`        VARCHAR(40) NOT NULL,
-#   PRIMARY KEY (`project_group_id`),
-#   CONSTRAINT `FK_group_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-#   CONSTRAINT `FK_group_project` FOREIGN KEY (`project_group_id`) REFERENCES `project` (`project_id`),
-#   UNIQUE KEY `UK_follower_followed` (`user_id`, `project_group_id`)
-# )
-#   ENGINE = InnoDB
-#   DEFAULT CHARSET = utf8;
+
+CREATE TABLE `message` (
+  `message_id` BIGINT(20)   NOT NULL AUTO_INCREMENT,
+  `user_id`    BIGINT(20)   NOT NULL,
+  `project_id` BIGINT(20)   NOT NULL,
+  `content`    VARCHAR(255) NOT NULL,
+  `status`     VARCHAR(50)  NOT NULL,
+  `created_at` DATETIME     NOT NULL,
+  PRIMARY KEY (`message_id`),
+  KEY `FK_message_user` (`user_id`),
+  KEY `FK_message_project` (`project_id`),
+  CONSTRAINT `FK_message_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `FK_message_project` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 
 CREATE TABLE `liked_project` (
@@ -82,12 +90,12 @@ CREATE TABLE `liked_project` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE `project_comment` (
+CREATE TABLE `comment` (
   `comment_id` BIGINT(20)   NOT NULL AUTO_INCREMENT,
-  `content`            VARCHAR(255) NOT NULL,
-  `created_at`         DATETIME     NOT NULL,
-  `user_id`            BIGINT(20)   NOT NULL,
-  `project_id`         BIGINT(20)   NOT NULL,
+  `content`    VARCHAR(255) NOT NULL,
+  `created_at` DATETIME     NOT NULL,
+  `user_id`    BIGINT(20)   NOT NULL,
+  `project_id` BIGINT(20)   NOT NULL,
   PRIMARY KEY (`comment_id`),
   KEY `FK_comment_by_user` (`user_id`),
   KEY `FK_project_comment` (`project_id`),
@@ -124,6 +132,20 @@ CREATE TABLE `relationship` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+CREATE TABLE `membership` (
+  `membership_id` BIGINT(20)  NOT NULL AUTO_INCREMENT,
+  `user_id`       BIGINT(20)  NOT NULL,
+  `project_id`    BIGINT(20)  NOT NULL,
+  `status`        VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`membership_id`),
+  KEY `FK_project_member` (`user_id`),
+  KEY `FK_unique_project` (`project_id`),
+  CONSTRAINT `FK_project_member` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `FK_unique_project` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`),
+  UNIQUE KEY `UK_user_project` (`user_id`, `project_id`)
+)
+  ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
 
 
 # TEST DATA

@@ -9,6 +9,7 @@ import college.startup.dto.UserParams;
 import college.startup.repository.UserRepository;
 import college.startup.service.SecurityContextService;
 import college.startup.service.UserService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -55,9 +56,21 @@ public class UserController {
         return userRepository.save(params.toUser());
     }
 
+    @RequestMapping(value = "/fcm", method = RequestMethod.POST)
+    public User registerFireBaseId( @Valid @RequestBody FcmRegistrationParams params) {
+        final User user = securityContextService.currentUser();
+        user.setFireBaseId(params.getToken());
+        return userRepository.save(user);
+    }
+
     @RequestMapping(value = "{id:\\d+}")
     public UserDTO show(@PathVariable("id") Long id) {
         return userService.findOne(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    @Data
+    public class FcmRegistrationParams{
+        private String token;
     }
 
     @RequestMapping("/me")
