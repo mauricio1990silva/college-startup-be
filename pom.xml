@@ -86,6 +86,13 @@
             <systemPath>${project.basedir}/src/main/resources/gcm-server-1.0-SNAPSHOT-jar-with-dependencies.jar
             </systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+            <version>1.0.0.Final</version>
+        </dependency>
+
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
