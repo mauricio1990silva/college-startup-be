@@ -27,6 +27,7 @@
         <querydsl.version>4.0.8</querydsl.version>
         <spock.version>1.0-groovy-2.4</spock.version>
         <firebase.version>3.0.1</firebase.version>
+        <tomcat.version>7.0.59</tomcat.version>
     </properties>
 
     <dependencies>
