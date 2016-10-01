@@ -157,7 +157,7 @@
         <profile>
             <id>openshift</id>
             <build>
-                <finalName>{APP_NAME}</finalName>
+                <finalName>collegestartup</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
