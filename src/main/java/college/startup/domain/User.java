@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 import java.util.*;
 
 @Entity
-@Table(name = "user", catalog = "college_startup", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
+@Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = {"username"}))
 @ToString
 public class User implements UserDetails {
 

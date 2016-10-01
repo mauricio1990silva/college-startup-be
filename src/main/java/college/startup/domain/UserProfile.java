@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user_profile", catalog = "college_startup")
+@Table(name = "user_profile")
 @ToString
 public class UserProfile  {
 

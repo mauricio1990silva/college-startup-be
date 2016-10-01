@@ -2,7 +2,7 @@ spring:
   main:
     banner-mode: 'OFF'
   profiles:
-    active: local
+    active: dev
 security:
   basic:
     enabled: false
@@ -45,11 +45,11 @@ spring:
   profiles: dev
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:./db/dev;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
+    url: jdbc:mysql://127.8.117.2:3306/be
+    username: adminM4mBNj6
+    password: NBSiBKA3KpxZ
   jpa:
-    database: H2
+    database: MYSQL
     hibernate:
       ddl-auto: update
   thymeleaf:

@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "membership", catalog = "college_startup",
+@Table(name = "membership",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "project_id"}))
 @NoArgsConstructor
 @Data

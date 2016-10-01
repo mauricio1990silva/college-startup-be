@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "tag", catalog = "college_startup")
+@Table(name = "tag")
 @ToString
 public class Tag {
 

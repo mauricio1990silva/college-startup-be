@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "message", catalog = "college_startup")
+@Table(name = "message")
 public class Message implements Serializable {
 
     @Id

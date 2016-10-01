@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "project", catalog = "college_startup")
+@Table(name = "project")
 @ToString
 public class Project implements Serializable {
 

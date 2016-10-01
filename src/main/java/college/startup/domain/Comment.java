@@ -13,7 +13,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "comment", catalog = "college_startup")
+@Table(name = "comment")
 public class Comment implements Serializable {
 
     @Id
