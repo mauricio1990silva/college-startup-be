@@ -42,6 +42,11 @@ public class UserController {
         this.tokenHandler = tokenHandler;
     }
 
+    @RequestMapping("hello")
+    public String sayHello(){
+        return ("Hello, SpringBoot on Wildfly");
+    }
+
     @RequestMapping
     public Page<User> list(@RequestParam(value = "page", required = false) @Nullable Integer page,
                            @RequestParam(value = "size", required = false) @Nullable Integer size) {
